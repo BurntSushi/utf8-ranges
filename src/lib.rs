@@ -483,7 +483,6 @@ mod tests {
 
         let seqs = Utf8Sequences::new('\u{0}', '\u{FFFF}')
                                  .collect::<Vec<_>>();
-        println!("{:?}", Utf8Sequences::new('\u{0}', '\u{10FFFF}').collect::<Vec<_>>());
         assert_eq!(seqs, vec![
             One(rutf8(0x0, 0x7F)),
             Two([rutf8(0xC2, 0xDF), rutf8(0x80, 0xBF)]),
@@ -492,5 +491,12 @@ mod tests {
             Three([rutf8(0xED, 0xED), rutf8(0x80, 0x9F), rutf8(0x80, 0xBF)]),
             Three([rutf8(0xEE, 0xEF), rutf8(0x80, 0xBF), rutf8(0x80, 0xBF)]),
         ]);
+    }
+
+    #[test]
+    fn scratch() {
+        for range in Utf8Sequences::new('\u{0}', '\u{FFFF}') {
+            println!("{:?}", range);
+        }
     }
 }
