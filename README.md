@@ -13,7 +13,7 @@ Dual-licensed under MIT or the [UNLICENSE](http://unlicense.org).
 
 ### Documentation
 
-[http://burntsushi.net/rustdoc/utf8_ranges/](http://burntsushi.net/rustdoc/utf8_ranges/).
+[http://burntsushi.net/rustdoc/utf8_ranges/](http://burntsushi.net/rustdoc/utf8_ranges/)
 
 
 ### Example
