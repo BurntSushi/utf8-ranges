@@ -70,12 +70,20 @@ Unicode scalar values.
 
 # Why would I ever use this?
 
-You probably don't. In 99% of cases, you just decode the byte sequence into
-a Unicode scalar value and compare scalar values directly. However, this
-explicit decoding step isn't always possible. For example, the construction of
-some finite state machines may benefit from converting ranges of scalar values
-into UTF-8 decoder automata (e.g., for character classes in regular
-expressions).
+You probably won't ever need this. In 99% of cases, you just decode the byte
+sequence into a Unicode scalar value and compare scalar values directly.
+However, this explicit decoding step isn't always possible. For example, the
+construction of some finite state machines may benefit from converting ranges
+of scalar values into UTF-8 decoder automata (e.g., for character classes in
+regular expressions).
+
+# Lineage
+
+I got the idea from Russ Cox in his
+[article on regexps](https://swtch.com/~rsc/regexp/regexp3.html)
+and from
+[Lucene](https://github.com/apache/lucene-solr/blob/trunk/lucene/core/src/java/org/apache/lucene/util/automaton/UTF32ToUTF8.java).
+Russ Cox got it from Ken Thompson's `grep` (no source, folk lore?).
 */
 
 #![deny(missing_docs)]
