@@ -79,11 +79,12 @@ regular expressions).
 
 # Lineage
 
-I got the idea from Russ Cox in his
-[article on regexps](https://swtch.com/~rsc/regexp/regexp3.html)
-and from
-[Lucene](https://github.com/apache/lucene-solr/blob/trunk/lucene/core/src/java/org/apache/lucene/util/automaton/UTF32ToUTF8.java).
+I got the idea and general implementation strategy from Russ Cox in his
+[article on regexps](https://swtch.com/~rsc/regexp/regexp3.html) and RE2.
 Russ Cox got it from Ken Thompson's `grep` (no source, folk lore?).
+I also got the idea from
+[Lucene](https://github.com/apache/lucene-solr/blob/trunk/lucene/core/src/java/org/apache/lucene/util/automaton/UTF32ToUTF8.java),
+which uses it for executing automata on their term index.
 */
 
 #![deny(missing_docs)]
