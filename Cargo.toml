@@ -9,3 +9,6 @@ repository = "https://github.com/BurntSushi/utf8-ranges"
 readme = "README.md"
 keywords = ["codepoint", "utf8", "automaton", "range"]
 license = "Unlicense/MIT"
+
+[dev-dependencies]
+quickcheck = "0.2"
