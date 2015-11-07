@@ -440,6 +440,8 @@ fn max_scalar_value(nbytes: usize) -> u32 {
 
 #[cfg(test)]
 mod tests {
+    use std::char;
+
     use quickcheck::{TestResult, quickcheck};
 
     use char_utf8::encode_utf8;
@@ -472,6 +474,20 @@ mod tests {
         never_accepts_surrogate_codepoints('\u{0}', '\u{10FFFE}');
         never_accepts_surrogate_codepoints('\u{80}', '\u{10FFFF}');
         never_accepts_surrogate_codepoints('\u{D7FF}', '\u{E000}');
+    }
+
+    #[test]
+    fn single_codepoint_one_sequence() {
+        // Tests that every range of scalar values that contains a single
+        // scalar value is recognized by one sequence of byte ranges.
+        for i in 0x0..(0x10FFFF + 1) {
+            let c = match char::from_u32(i) {
+                None => continue,
+                Some(c) => c,
+            };
+            let seqs: Vec<_> = Utf8Sequences::new(c, c).collect();
+            assert_eq!(seqs.len(), 1);
+        }
     }
 
     #[test]
