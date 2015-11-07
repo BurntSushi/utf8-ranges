@@ -6,7 +6,7 @@ Stated differently, this lets one embed UTF-8 decoding as part of one's
 automaton.
 
 [![Linux build status](https://api.travis-ci.org/BurntSushi/utf8-ranges.png)](https://travis-ci.org/BurntSushi/utf8-ranges)
-[![](http://meritbadge.herokuapp.com/utf8-ranges)](https://crates.io/crates/walkdir)
+[![](http://meritbadge.herokuapp.com/utf8-ranges)](https://crates.io/crates/utf8-ranges)
 
 Dual-licensed under MIT or the [UNLICENSE](http://unlicense.org).
 
