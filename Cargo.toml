@@ -10,5 +10,8 @@ readme = "README.md"
 keywords = ["codepoint", "utf8", "automaton", "range"]
 license = "Unlicense/MIT"
 
+[badges]
+travis-ci = { repository = "BurntSushi/utf8-ranges" }
+
 [dev-dependencies]
 quickcheck = "0.4.1"
