@@ -90,7 +90,7 @@ which uses it for executing automata on their term index.
 
 This library can function in `#![no_std]` environments that have access to
 a heap allocator. To do so, disable the library's default features
-(to remove the on-by-default "std" feature).
+(to remove the on-by-default "std" feature) and add the "alloc" feature.
 
 Presently using a nightly compiler toolchain is required for this option.
 
@@ -98,40 +98,37 @@ Presently using a nightly compiler toolchain is required for this option.
 [dependencies.utf8-ranges]
 version = "1"
 default-features = false
-features = []
+features = ["alloc"]
 ```
 
 */
 
 #![cfg_attr(not(feature = "std"), no_std)]
-#![cfg_attr(not(feature = "std"), feature(alloc))]
+#![cfg_attr(all(feature = "alloc", not(feature = "std")), feature(alloc))]
 
 #![deny(missing_docs)]
 
 #[cfg(test)] extern crate quickcheck;
 
-#[cfg(all(test, not(feature = "std")))]
+#[cfg(test)]
 #[macro_use]
-extern crate std;
+extern crate std as std_test;
 
-#[cfg(not(feature = "std"))]
+#[cfg(feature = "std")]
+#[macro_use]
+extern crate std as core;
+
+#[cfg(all(feature = "alloc", not(feature = "std")))]
 #[macro_use]
 extern crate alloc;
 
-#[cfg(feature = "std")]
-use std::char;
-#[cfg(feature = "std")]
-use std::fmt;
-#[cfg(feature = "std")]
-use std::slice;
-
-#[cfg(not(feature = "std"))]
 use core::char;
-#[cfg(not(feature = "std"))]
 use core::fmt;
-#[cfg(not(feature = "std"))]
 use core::slice;
-#[cfg(not(feature = "std"))]
+
+#[cfg(feature = "std")]
+use core::prelude::v1::*;
+#[cfg(all(feature = "alloc", not(feature = "std")))]
 use alloc::Vec;
 
 
@@ -330,7 +327,7 @@ impl Utf8Sequences {
     /// Create a new iterator over UTF-8 byte ranges for the scalar value range
     /// given.
     pub fn new(start: char, end: char) -> Self {
-        let mut it = Utf8Sequences { range_stack: vec![] };
+        let mut it = Utf8Sequences { range_stack: Vec::new() };
         it.push(start as u32, end as u32);
         it
     }
@@ -480,9 +477,8 @@ fn max_scalar_value(nbytes: usize) -> u32 {
 
 #[cfg(test)]
 mod tests {
-    use std::char;
-    #[cfg(not(feature = "std"))]
-    use std::vec::Vec;
+    use core::char;
+    use std_test::vec::Vec;
 
     use quickcheck::{TestResult, quickcheck};
 
@@ -496,7 +492,7 @@ mod tests {
     fn never_accepts_surrogate_codepoints(start: char, end: char) {
         let mut buf = [0; MAX_UTF8_BYTES];
         for cp in 0xD800..0xE000 {
-            let c = unsafe { ::std::mem::transmute(cp) };
+            let c = unsafe { ::core::mem::transmute(cp) };
             let n = encode_utf8(c, &mut buf).unwrap();
             for r in Utf8Sequences::new(start, end) {
                 if r.matches(&buf[0..n]) {
