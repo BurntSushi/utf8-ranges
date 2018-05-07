@@ -20,5 +20,5 @@ cargo test --verbose
 # If we have nightly, test no_std mode by removing.
 # the default feature, "std".
 if [ "$TRAVIS_RUST_VERSION" = "nightly" ]; then
-  cargo test --lib --verbose --no-default-features
+  cargo test --lib --verbose --no-default-features --features "alloc"
 fi
