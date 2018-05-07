@@ -85,15 +85,55 @@ Russ Cox got it from Ken Thompson's `grep` (no source, folk lore?).
 I also got the idea from
 [Lucene](https://github.com/apache/lucene-solr/blob/ae93f4e7ac6a3908046391de35d4f50a0d3c59ca/lucene/core/src/java/org/apache/lucene/util/automaton/UTF32ToUTF8.java),
 which uses it for executing automata on their term index.
+
+# Use in no_std environments
+
+This library can function in `#![no_std]` environments that have access to
+a heap allocator. To do so, disable the library's default features
+(to remove the on-by-default "std" feature).
+
+Presently using a nightly compiler toolchain is required for this option.
+
+```toml
+[dependencies.utf8-ranges]
+version = "1"
+default-features = false
+features = []
+```
+
 */
+
+#![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(not(feature = "std"), feature(alloc))]
 
 #![deny(missing_docs)]
 
 #[cfg(test)] extern crate quickcheck;
 
+#[cfg(all(test, not(feature = "std")))]
+#[macro_use]
+extern crate std;
+
+#[cfg(not(feature = "std"))]
+#[macro_use]
+extern crate alloc;
+
+#[cfg(feature = "std")]
 use std::char;
+#[cfg(feature = "std")]
 use std::fmt;
+#[cfg(feature = "std")]
 use std::slice;
+
+#[cfg(not(feature = "std"))]
+use core::char;
+#[cfg(not(feature = "std"))]
+use core::fmt;
+#[cfg(not(feature = "std"))]
+use core::slice;
+#[cfg(not(feature = "std"))]
+use alloc::Vec;
+
 
 use char_utf8::encode_utf8;
 
@@ -441,6 +481,8 @@ fn max_scalar_value(nbytes: usize) -> u32 {
 #[cfg(test)]
 mod tests {
     use std::char;
+    #[cfg(not(feature = "std"))]
+    use std::vec::Vec;
 
     use quickcheck::{TestResult, quickcheck};
 

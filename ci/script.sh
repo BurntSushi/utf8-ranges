@@ -14,4 +14,11 @@ if [ "$TRAVIS_RUST_VERSION" = "1.12.0" ]; then
   exit
 fi
 
+# Run tests.
 cargo test --verbose
+
+# If we have nightly, test no_std mode by removing.
+# the default feature, "std".
+if [ "$TRAVIS_RUST_VERSION" = "nightly" ]; then
+  cargo test --lib --verbose --no-default-features
+fi

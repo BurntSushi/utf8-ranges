@@ -13,5 +13,10 @@ license = "Unlicense/MIT"
 [badges]
 travis-ci = { repository = "BurntSushi/utf8-ranges" }
 
+[features]
+default = ["std"]
+# When disabled, allows use in `no_std` builds with access to a heap by way of alloc
+std = []
+
 [dev-dependencies]
 quickcheck = "0.6"
