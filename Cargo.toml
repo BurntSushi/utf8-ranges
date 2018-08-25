@@ -14,4 +14,4 @@ license = "Unlicense/MIT"
 travis-ci = { repository = "BurntSushi/utf8-ranges" }
 
 [dev-dependencies]
-quickcheck = "0.6"
+quickcheck = { version = "0.7", default-features = false }
