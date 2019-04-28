@@ -36,7 +36,7 @@ fn main() {
 
 The output:
 
-```
+```text
 [0-7F]
 [C2-DF][80-BF]
 [E0][A0-BF][80-BF]
