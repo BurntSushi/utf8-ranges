@@ -15,5 +15,5 @@ exclude = ["/ci/*", "/.travis.yml", "/Makefile", "/ctags.rust", "/session.vim"]
 travis-ci = { repository = "BurntSushi/utf8-ranges" }
 
 [dev-dependencies]
-quickcheck = { version = "0.7", default-features = false }
+quickcheck = { version = "0.8", default-features = false }
 doc-comment = "0.3"
