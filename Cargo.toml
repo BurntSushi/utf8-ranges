@@ -2,7 +2,7 @@
 name = "utf8-ranges"
 version = "1.0.3"  #:version
 authors = ["Andrew Gallant <jamslam@gmail.com>"]
-description = "Convert ranges of Unicode codepoints to UTF-8 byte ranges."
+description = "DEPRECATED. Use regex-syntax::utf8 submodule instead."
 documentation = "https://docs.rs/utf8-ranges"
 homepage = "https://github.com/BurntSushi/utf8-ranges"
 repository = "https://github.com/BurntSushi/utf8-ranges"

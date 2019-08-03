@@ -1,3 +1,6 @@
+**DEPRECATED:** This crate has been folded into the
+[`regex-syntax`](https://docs.rs/regex-syntax) and is now deprecated.
+
 utf8-ranges
 ===========
 This crate converts contiguous ranges of Unicode scalar values to UTF-8 byte
