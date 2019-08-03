@@ -1,6 +1,6 @@
 [package]
 name = "utf8-ranges"
-version = "1.0.3"  #:version
+version = "1.0.4"  #:version
 authors = ["Andrew Gallant <jamslam@gmail.com>"]
 description = "DEPRECATED. Use regex-syntax::utf8 submodule instead."
 documentation = "https://docs.rs/utf8-ranges"
