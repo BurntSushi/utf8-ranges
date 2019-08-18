@@ -85,7 +85,26 @@ Russ Cox got it from Ken Thompson's `grep` (no source, folk lore?).
 I also got the idea from
 [Lucene](https://github.com/apache/lucene-solr/blob/ae93f4e7ac6a3908046391de35d4f50a0d3c59ca/lucene/core/src/java/org/apache/lucene/util/automaton/UTF32ToUTF8.java),
 which uses it for executing automata on their term index.
+
+# Use in no_std environments
+
+This library can function in `#![no_std]` environments that have access to
+a heap allocator. To do so, disable the library's default features
+(to remove the on-by-default "std" feature) and add the "alloc" feature.
+
+Presently using a nightly compiler toolchain is required for this option.
+
+```toml
+[dependencies.utf8-ranges]
+version = "1"
+default-features = false
+features = ["alloc"]
+```
+
 */
+
+#![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(all(feature = "alloc", not(feature = "std")), feature(alloc))]
 
 #![deny(missing_docs)]
 
@@ -98,9 +117,27 @@ extern crate doc_comment;
 #[cfg(test)]
 doctest!("../README.md");
 
-use std::char;
-use std::fmt;
-use std::slice;
+#[cfg(test)]
+#[macro_use]
+extern crate std as std_test;
+
+#[cfg(feature = "std")]
+#[macro_use]
+extern crate std as core;
+
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+#[macro_use]
+extern crate alloc;
+
+use core::char;
+use core::fmt;
+use core::slice;
+
+#[cfg(feature = "std")]
+use core::prelude::v1::*;
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use alloc::Vec;
+
 
 use char_utf8::encode_utf8;
 
@@ -297,7 +334,7 @@ impl Utf8Sequences {
     /// Create a new iterator over UTF-8 byte ranges for the scalar value range
     /// given.
     pub fn new(start: char, end: char) -> Self {
-        let mut it = Utf8Sequences { range_stack: vec![] };
+        let mut it = Utf8Sequences { range_stack: Vec::new() };
         it.push(start as u32, end as u32);
         it
     }
@@ -447,7 +484,8 @@ fn max_scalar_value(nbytes: usize) -> u32 {
 
 #[cfg(test)]
 mod tests {
-    use std::char;
+    use core::char;
+    use std_test::vec::Vec;
 
     use quickcheck::{TestResult, quickcheck};
 
@@ -461,7 +499,7 @@ mod tests {
     fn never_accepts_surrogate_codepoints(start: char, end: char) {
         let mut buf = [0; MAX_UTF8_BYTES];
         for cp in 0xD800..0xE000 {
-            let c = unsafe { ::std::mem::transmute(cp) };
+            let c = unsafe { ::core::mem::transmute(cp) };
             let n = encode_utf8(c, &mut buf).unwrap();
             for r in Utf8Sequences::new(start, end) {
                 if r.matches(&buf[0..n]) {
