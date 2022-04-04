@@ -91,12 +91,6 @@ which uses it for executing automata on their term index.
 
 #[cfg(test)]
 extern crate quickcheck;
-#[cfg(test)]
-#[macro_use]
-extern crate doc_comment;
-
-#[cfg(test)]
-doctest!("../README.md");
 
 use std::char;
 use std::fmt;
@@ -451,8 +445,7 @@ mod tests {
 
     use quickcheck::{TestResult, quickcheck};
 
-    use char_utf8::encode_utf8;
-    use {MAX_UTF8_BYTES, Utf8Range, Utf8Sequences};
+    use {Utf8Range, Utf8Sequences};
 
     fn rutf8(s: u8, e: u8) -> Utf8Range {
         Utf8Range::new(s, e)
