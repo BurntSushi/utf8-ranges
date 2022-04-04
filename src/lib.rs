@@ -459,16 +459,16 @@ mod tests {
     }
 
     fn never_accepts_surrogate_codepoints(start: char, end: char) {
-        let mut buf = [0; MAX_UTF8_BYTES];
         for cp in 0xD800..0xE000 {
-            let c = unsafe { ::std::mem::transmute(cp) };
-            let n = encode_utf8(c, &mut buf).unwrap();
+            let buf = encode_surrogate(cp);
             for r in Utf8Sequences::new(start, end) {
-                if r.matches(&buf[0..n]) {
-                    panic!("Sequence ({:X}, {:X}) contains range {:?}, \
-                            which matches surrogate code point {:X} \
-                            with encoded bytes {:?}",
-                           start as u32, end as u32, r, cp, &buf[0..n]);
+                if r.matches(&buf) {
+                    panic!(
+                        "Sequence ({:X}, {:X}) contains range {:?}, \
+                         which matches surrogate code point {:X} \
+                         with encoded bytes {:?}",
+                        start as u32, end as u32, r, cp, buf,
+                    );
                 }
             }
         }
@@ -525,10 +525,15 @@ mod tests {
         ]);
     }
 
-    #[test]
-    fn scratch() {
-        for range in Utf8Sequences::new('\u{0}', '\u{FFFF}') {
-            println!("{:?}", range);
-        }
+    fn encode_surrogate(cp: u32) -> [u8; 3] {
+        const TAG_CONT: u8 = 0b1000_0000;
+        const TAG_THREE_B: u8 = 0b1110_0000;
+
+        assert!(0xD800 <= cp && cp < 0xE000);
+        let mut dst = [0; 3];
+        dst[0] = (cp >> 12 & 0x0F) as u8 | TAG_THREE_B;
+        dst[1] = (cp >> 6 & 0x3F) as u8 | TAG_CONT;
+        dst[2] = (cp & 0x3F) as u8 | TAG_CONT;
+        dst
     }
 }
